@@ -1,37 +1,62 @@
-import { app, database } from "../firebase/clientApp";
-import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 
-// export async function getStaticProps() {
-// 	const dbInstance = collection(database, "items");
-// 	getDocs(dbInstance).then((data) => {
-// 		console.log(data);
-// 	});
+export const classFinder = (shortClassStr: string) => {
+	const classObj: { [key: string]: number } = {
+		WAR: 1,
+		CLR: 2,
+		PAL: 4,
+		RNG: 8,
+		SHD: 16,
+		DRU: 32,
+		MNK: 64,
+		BRD: 128,
+		ROG: 256,
+		SHM: 512,
+		NEC: 1024,
+		WIZ: 2048,
+		MAG: 4096,
+		ENC: 8192,
+		BST: 16384,
+		ALL: 65535,
+	};
 
-// return {
-// 	props: {
-// 		allItems,
-// 	},
-// };
-// }
+	return classObj[shortClassStr];
+};
 
-// const getItems = async () => {
-// 	const dbInstance = collection(database, "items");
-// 	const q = query(dbInstance, where("Name", "==", "Cloth Shirt"));
+export const slotFinder = (slot: string) => {
+	const slotObj: { [key: string]: number } = {
+		charm: 1,
+		leftEar: 2,
+		head: 4,
+		face: 8,
+		rightEar: 16,
+		neck: 32,
+		shoulder: 64,
+		arms: 128,
+		back: 256,
+		leftBracer: 512,
+		rightBracer: 1024,
+		range: 2048,
+		hands: 4096,
+		primary: 8192,
+		secondary: 16384,
+		leftRing: 32768,
+		rightRing: 65536,
+		chest: 131072,
+		legs: 262144,
+		feet: 524288,
+		waist: 1048576,
+	};
 
-// 	await getDocs(q).then((data) => {
-// 		data.docs.map((item) => {
-// 			console.log(item.data());
-// 		});
-// 	});
-// getDocs(dbInstance).then((data) => {
-// 	console.log(data);
-// });
-// };
+	return slotObj[slot];
+};
 
-// getItems();
-
-export default function DynamicSearch() {
+export default function DynamicSearch({
+	allWeapons,
+	selectedSlot,
+	getSelectedItem,
+}) {
 	const [searchString, setSearchString] = useState("");
 	const [armorData, setArmorData] = useState([]);
 	const [weaponData, setWeaponData] = useState([]);
@@ -39,11 +64,22 @@ export default function DynamicSearch() {
 
 	useEffect(() => {
 		//setArmorData
-		//setWeaponData
-	}, []); //watch prop?
+		setWeaponData(allWeapons);
+	}, [allWeapons]); //watch prop?
+
+	useEffect(() => {
+		if (searchString.length > 2) {
+			const results = filterSearch();
+			setSearchResults(results.slice(0, 5));
+		}
+
+		if (searchString.length === 0) {
+			setSearchResults(weaponData.slice(0, 5));
+		}
+	}, [searchString]);
 
 	const handleClick = () => {
-		console.log(searchString);
+		// console.log(searchString);
 		//filter array based on search string
 		//setSearchResult
 		//map thru search results in the <ul>
@@ -51,14 +87,27 @@ export default function DynamicSearch() {
 
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setSearchString(event.target.value);
+		// setSearchResults(filterSearch());
 	};
 
-	const handleItemClick = (
-		event: React.MouseEvent<HTMLLIElement, MouseEvent>
-	) => {};
+	const filterSearch = () => {
+		return weaponData.filter((weapon) => {
+			return weapon.Name.toLowerCase().includes(searchString.toLowerCase());
+		});
+	};
+
+	const handleItemClick = (selectedItem) => {
+		const slot = document.getElementById(selectedSlot);
+		slot.textContent = "";
+		slot.dataset.itemId = selectedItem.id;
+		const img = document.createElement("ins");
+		// img.style.backgroundColor = "black";
+		img.style.backgroundImage = `url(http://items.sodeq.org/img/item_${selectedItem.icon}.png)`;
+		slot?.appendChild(img);
+	};
 
 	return (
-		<div className="flex-col border w-1/3 py-4">
+		<div className="flex-col border w-96 py-4 mt-5">
 			<div className="flex gap-3 pb-4 px-4">
 				<input
 					className="shadow appearance-none border rounded w-2/3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -77,23 +126,29 @@ export default function DynamicSearch() {
 					Search
 				</button>
 			</div>
-
-			<ul className="mx-4 border">
-				<li
-					className="w-full bg-blue-300 hover:bg-blue-400 cursor-pointer px-2 py-1 mb-0.5"
-					onClick={(event) => {
-						handleItemClick(event);
-					}}
-				>
-					search result 1
-				</li>
-				<li className="w-full bg-blue-300 hover:bg-blue-400 cursor-pointer px-2 py-1 mb-0.5">
-					search result 2
-				</li>
-				<li className="w-full bg-blue-300 hover:bg-blue-400 cursor-pointer px-2 py-1 mb-0.5">
-					search result 3
-				</li>
-			</ul>
+			{searchResults ? (
+				<ul className="mx-4">
+					{searchResults.map((item) => (
+						<li
+							key={item.id}
+							className="w-full bg-blue-300 hover:bg-blue-400 cursor-pointer px-2 py-1 mb-0.5"
+							onClick={() => {
+								handleItemClick(item);
+							}}
+						>
+							<div className="flex gap-5 items-center py-px">
+								<Image
+									src={`http://items.sodeq.org/img/item_${item.icon}.png`}
+									height={35}
+									width={35}
+									alt="item image"
+								/>
+								{item.Name}
+							</div>
+						</li>
+					))}
+				</ul>
+			) : null}
 		</div>
 	);
 }

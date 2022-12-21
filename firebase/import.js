@@ -9,7 +9,7 @@ const jsonToFirestore = async () => {
 		initializeFirebaseApp(serviceAccount);
 		console.log("Firebase Initialized");
 
-		restore("../firebase/weps.json");
+		restore("../firebase/armor.json");
 		console.log("Upload Success");
 	} catch (error) {
 		console.log(error);

@@ -1,12 +1,55 @@
 import Head from "next/head";
-import Image from "next/image";
 import { Inter } from "@next/font/google";
 import styles from "../styles/Home.module.css";
 import DynamicSearch from "../components/DynamicSearch";
+import CharacterSheet from "../components/CharacterSheet";
+import CharacterSheetActions from "../components/CharacterSheetActions";
+import { app, database } from "../firebase/clientApp";
+import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
+import { useState } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function Home() {
+const getWeps = async () => {
+	const dbInstance = collection(database, "weapons");
+	const q = query(dbInstance, where("Name", ">=", "Sh"));
+
+	const allWeapons = await getDocs(q).then((data) => {
+		return data.docs.map((item) => item.data());
+	});
+
+	return allWeapons;
+};
+
+export async function getStaticProps() {
+	const allWeapons = await getWeps();
+
+	return {
+		props: {
+			allWeapons,
+		},
+	};
+}
+
+export default function Home({ allWeapons }) {
+	const [selectedSlot, setSelectedSlot] = useState("");
+	const [selectedItem, setSelectedItem] = useState({});
+
+	const getSelectedSlot = (slot) => {
+		setSelectedSlot(slot);
+	};
+
+	const getSelectedItem = (item) => {
+		setSelectedItem(item);
+	};
+
+	const getItemIcon = (itemId) => {
+		const item = allWeapons.filter((item) => {
+			return item.id == itemId;
+		});
+		return item[0].icon;
+	};
+
 	return (
 		<>
 			<Head>
@@ -15,8 +58,16 @@ export default function Home() {
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
-
-			<DynamicSearch />
+			<CharacterSheetActions getItemIcon={getItemIcon} />
+			<CharacterSheet
+				getSelectedSlot={getSelectedSlot}
+				selectedItem={selectedItem}
+			/>
+			<DynamicSearch
+				allWeapons={allWeapons}
+				selectedSlot={selectedSlot}
+				getSelectedItem={getSelectedItem}
+			/>
 		</>
 	);
 }
