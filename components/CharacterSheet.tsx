@@ -1,14 +1,9 @@
 import React, { useState, useEffect } from "react";
 
-export default function CharacterSheet({ getSelectedSlot, selectedItem }) {
-	const [selectedSlot, setSelectedSlot] = useState("");
-	const [slotImageURL, setSlotImageURL] = useState(null);
-	const [charProfile, setCharProfile] = useState({});
-
+export default function CharacterSheet({ getSelectedSlot }) {
 	const handleInventoryClick = (
 		event: React.MouseEvent<HTMLDivElement, MouseEvent>
 	) => {
-		setSelectedSlot(event.currentTarget.id);
 		getSelectedSlot(event.currentTarget.id);
 
 		const invSlotSelected = document.getElementsByClassName(
@@ -29,194 +24,147 @@ export default function CharacterSheet({ getSelectedSlot, selectedItem }) {
 			<div id="top" className="flex gap-8 pb-3">
 				<div
 					id="leftEar"
-					className="inventory-slot"
+					className="inventory-slot bg-[url('../public/eqicons/ear.jpg')] bg-no-repeat bg-contain"
 					onClick={(event) => {
 						handleInventoryClick(event);
 					}}
-				>
-					Ear
-				</div>
+				></div>
 				<div
 					id="face"
-					className="inventory-slot"
+					className="inventory-slot bg-[url('../public/eqicons/face.jpg')] bg-no-repeat bg-contain"
 					onClick={(event) => {
 						handleInventoryClick(event);
 					}}
-				>
-					Face
-				</div>
+				></div>
 				<div
 					id="head"
-					className="inventory-slot"
+					className="inventory-slot bg-[url('../public/eqicons/head.jpg')] bg-no-repeat bg-contain"
 					onClick={(event) => {
 						handleInventoryClick(event);
 					}}
-				>
-					Head
-				</div>
+				></div>
 				<div
 					id="rightEar"
-					className="inventory-slot"
+					className="inventory-slot bg-[url('../public/eqicons/ear.jpg')] bg-no-repeat bg-contain"
 					onClick={(event) => {
 						handleInventoryClick(event);
 					}}
-				>
-					Ear
-				</div>
+				></div>
 			</div>
 			<div className="flex gap-0.5 pb-3 justify-between">
-				<div id="left-side border flex gap-0.5">
+				<div id="left-side flex gap-0.5">
 					<div
 						id="chest"
-						className="inventory-slot"
+						className="inventory-slot bg-[url('../public/eqicons/chest.jpg')] bg-no-repeat bg-contain"
 						onClick={(event) => {
 							handleInventoryClick(event);
 						}}
-					>
-						Chest
-					</div>
+					></div>
 					<div
 						id="arms"
-						className="inventory-slot"
+						className="inventory-slot bg-[url('../public/eqicons/arms.jpg')] bg-no-repeat bg-contain"
 						onClick={(event) => {
 							handleInventoryClick(event);
 						}}
-					>
-						Arms
-					</div>
+					></div>
 					<div
 						id="waist"
-						className="inventory-slot"
+						className="inventory-slot bg-[url('../public/eqicons/waist.jpg')] bg-no-repeat bg-contain"
 						onClick={(event) => {
 							handleInventoryClick(event);
 						}}
-					>
-						Waist
-					</div>
+					></div>
 					<div
 						id="leftBracer"
-						className="inventory-slot"
+						className="inventory-slot bg-[url('../public/eqicons/bracer.jpg')] bg-no-repeat bg-contain"
 						onClick={(event) => {
 							handleInventoryClick(event);
 						}}
-					>
-						Bracer
-					</div>
+					></div>
 					<div
 						id="legs"
-						className="inventory-slot"
+						className="inventory-slot bg-[url('../public/eqicons/legs.jpg')] bg-no-repeat bg-contain"
 						onClick={(event) => {
 							handleInventoryClick(event);
 						}}
-					>
-						Legs
-					</div>
+					></div>
 				</div>
-				<div id="right-side border flex gap-0.5">
+				<div id="right-side flex gap-0.5">
 					<div
 						id="neck"
-						className="inventory-slot"
+						className="inventory-slot bg-[url('../public/eqicons/neck.jpg')] bg-no-repeat bg-contain"
 						onClick={(event) => {
 							handleInventoryClick(event);
 						}}
-					>
-						Neck
-					</div>
+					></div>
 					<div
 						id="back"
-						className="inventory-slot"
+						className="inventory-slot bg-[url('../public/eqicons/back.jpg')] bg-no-repeat bg-contain"
 						onClick={(event) => {
 							handleInventoryClick(event);
 						}}
-					>
-						Back
-					</div>
+					></div>
 					<div
 						id="shoulder"
-						className="inventory-slot"
+						className="inventory-slot bg-[url('../public/eqicons/shoulders.jpg')] bg-no-repeat bg-contain"
 						onClick={(event) => {
 							handleInventoryClick(event);
 						}}
-					>
-						Shoulder
-					</div>
+					></div>
 					<div
 						id="rightBracer"
-						className="inventory-slot"
+						className="inventory-slot bg-[url('../public/eqicons/bracer.jpg')] bg-no-repeat bg-contain"
 						onClick={(event) => {
 							handleInventoryClick(event);
 						}}
-					>
-						Bracer
-					</div>
+					></div>
 					<div
 						id="feet"
-						className="inventory-slot"
+						className="inventory-slot bg-[url('../public/eqicons/feet.jpg')] bg-no-repeat bg-contain"
 						onClick={(event) => {
 							handleInventoryClick(event);
 						}}
-					>
-						Feet
-					</div>
+					></div>
 				</div>
 			</div>
-			<div
-				id="bottom"
-				className="flex gap-0.5 mb-3 place-content-center border"
-			>
+			<div id="bottom" className="flex gap-0.5 mb-3 place-content-center">
 				<div
 					id="leftRing"
-					className="inventory-slot"
+					className="inventory-slot bg-[url('../public/eqicons/finger.jpg')] bg-no-repeat bg-contain"
 					onClick={(event) => {
 						handleInventoryClick(event);
 					}}
-				>
-					Finger
-				</div>
+				></div>
 				<div
 					id="rightRing"
-					className="inventory-slot"
+					className="inventory-slot bg-[url('../public/eqicons/finger.jpg')] bg-no-repeat bg-contain"
 					onClick={(event) => {
 						handleInventoryClick(event);
 					}}
-				>
-					Finger
-				</div>
+				></div>
 			</div>
-			<div id="weapons" className="flex gap-0.5 place-content-center border">
+			<div id="weapons" className="flex gap-0.5 place-content-center">
 				<div
 					id="primary"
-					className="inventory-slot relative"
-					// style={{
-					// 	backgroundImage: `${slotImageURL}`,
-					// }}
+					className="inventory-slot bg-[url('../public/eqicons/primary.jpg')] bg-no-repeat bg-contain"
 					onClick={(event) => {
 						handleInventoryClick(event);
 					}}
-				>
-					Primary
-				</div>
+				></div>
 				<div
 					id="secondary"
-					className="inventory-slot relative"
-					// style={{
-					// 	backgroundImage: `${slotImageURL}`,
-					// }}
+					className="inventory-slot bg-[url('../public/eqicons/secondary.jpg')] bg-no-repeat bg-contain"
 					onClick={(event) => {
 						handleInventoryClick(event);
 					}}
-				>
-					Secondary
-				</div>
+				></div>
 				<div
 					id="range"
-					className="inventory-slot"
+					className="inventory-slot bg-[url('../public/eqicons/range.jpg')] bg-no-repeat bg-contain"
 					onClick={(event) => {
 						handleInventoryClick(event);
 					}}
-				>
-					Range
-				</div>
+				></div>
 			</div>
 		</div>
 	);

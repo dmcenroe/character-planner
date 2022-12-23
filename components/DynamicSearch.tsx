@@ -52,29 +52,26 @@ export const slotFinder = (slot: string) => {
 	return slotObj[slot];
 };
 
-export default function DynamicSearch({
-	allWeapons,
-	selectedSlot,
-	getSelectedItem,
-}) {
+export default function DynamicSearch({ allWeapons, selectedSlot, allArmor }) {
 	const [searchString, setSearchString] = useState("");
 	const [armorData, setArmorData] = useState([]);
 	const [weaponData, setWeaponData] = useState([]);
 	const [searchResults, setSearchResults] = useState([]);
 
 	useEffect(() => {
-		//setArmorData
+		setArmorData(allArmor);
 		setWeaponData(allWeapons);
-	}, [allWeapons]); //watch prop?
+		setSearchResults(allWeapons.slice(0, 11));
+	}, [allWeapons, allArmor]);
 
 	useEffect(() => {
 		if (searchString.length > 2) {
 			const results = filterSearch();
-			setSearchResults(results.slice(0, 5));
+			setSearchResults(results.slice(0, 11));
 		}
 
 		if (searchString.length === 0) {
-			setSearchResults(weaponData.slice(0, 5));
+			setSearchResults(weaponData.slice(0, 11));
 		}
 	}, [searchString]);
 
@@ -87,29 +84,46 @@ export default function DynamicSearch({
 
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setSearchString(event.target.value);
-		// setSearchResults(filterSearch());
 	};
 
 	const filterSearch = () => {
-		return weaponData.filter((weapon) => {
-			return weapon.Name.toLowerCase().includes(searchString.toLowerCase());
+		const allItems = [...armorData, ...weaponData];
+
+		return allItems.filter((item) => {
+			return item.Name.toLowerCase().includes(searchString.toLowerCase());
 		});
 	};
 
 	const handleItemClick = (selectedItem) => {
 		const slot = document.getElementById(selectedSlot);
-		slot.textContent = "";
-		slot.dataset.itemId = selectedItem.id;
-		const img = document.createElement("ins");
-		// img.style.backgroundColor = "black";
-		img.style.backgroundImage = `url(http://items.sodeq.org/img/item_${selectedItem.icon}.png)`;
-		slot?.appendChild(img);
+		if (slot) {
+			// slot.textContent = "";
+			// const zamLink = document.createElement("a");
+			// zamLink.href = "http://war.allakhazam.com/db/item.html?waritem=402307";
+			// slot?.appendChild(zamLink);
+
+			console.log(slot);
+
+			slot.dataset.itemId = selectedItem.id;
+			console.log(slot);
+			const img = document.createElement("ins");
+			img.style.backgroundImage = `url(http://items.sodeq.org/img/item_${selectedItem.icon}.png)`;
+			slot?.appendChild(img);
+
+			const itemName = selectedItem.Name;
+			const link = document.createElement("a");
+			link.href = "";
+			link.className = "item-link";
+			link.dataset.eq = `item=${itemName}`;
+			slot?.appendChild(link);
+		}
 	};
 
 	return (
-		<div className="flex-col border w-96 py-4 mt-5">
+		<div className="flex-col w-96">
 			<div className="flex gap-3 pb-4 px-4">
 				<input
+					autoComplete="off"
 					className="shadow appearance-none border rounded w-2/3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 					id="item-search"
 					type="text"
@@ -131,12 +145,17 @@ export default function DynamicSearch({
 					{searchResults.map((item) => (
 						<li
 							key={item.id}
-							className="w-full bg-blue-300 hover:bg-blue-400 cursor-pointer px-2 py-1 mb-0.5"
+							className="w-full bg-[#4e4e86] hover:bg-blue-400 cursor-pointer px-2 py-1 mb-0.5 text-stone-200"
 							onClick={() => {
 								handleItemClick(item);
 							}}
 						>
-							<div className="flex gap-5 items-center py-px">
+							<div className="item-search-result flex gap-5 items-center py-px relative">
+								<a
+									className="item-link"
+									href=""
+									data-eq={`item=${item.Name}`}
+								></a>
 								<Image
 									src={`http://items.sodeq.org/img/item_${item.icon}.png`}
 									height={35}
